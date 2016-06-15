@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Calculadora</string>
+    <string name="main_delete">Borrar</string>
+    <string name="main_binary">Modo Binario</string>
+    <string name="main_standard">Modo Estándar</string>
+</resources>
