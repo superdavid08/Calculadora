@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Calculator</string>
     <string name="main_delete">Delete</string>
-    <string name="main_binary">Binary Mode</string>
-    <string name="main_standard">Standard Mode</string>
+    <string name="main_binary">Change to Binary Mode</string>
+    <string name="main_standard">Change to Standard Mode</string>
+    <string name="main_invalidOperation">Invalid Operation</string>
 </resources>

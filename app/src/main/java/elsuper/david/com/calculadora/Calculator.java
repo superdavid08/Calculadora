@@ -14,6 +14,7 @@ public class Calculator {
         MODULE //4
     }
 
+    //Operaciones posibles para esta calculadora en modo estándar
     public double standardOperation(double number1, double number2, TypeOperation operator){
 
         double result = 0;
@@ -39,18 +40,11 @@ public class Calculator {
     }
 
 
+    //Operaciones posibles para esta calculadora en modo binario
     public String binaryOperation(String number1, String number2, TypeOperation operator){
 
         switch (operator.ordinal()) {
             case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
                 break;
         }
         return "";
