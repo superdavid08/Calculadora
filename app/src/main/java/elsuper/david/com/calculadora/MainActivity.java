@@ -211,7 +211,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else {
                     //Si hay en pantalla un operador, se valida si hay un punto existente en el lado derecho del operador
                     String operands[] = screenContent.split(operator);
-                    if(!operands[1].contains(".")) {
+                    if(operands.length == 1)
+                        etResult.setText(etResult.getText().toString() + btnPoint.getText().toString());
+                    if(operands.length > 1 && !operands[1].contains(".")) {
                         etResult.setText(etResult.getText().toString() + btnPoint.getText().toString());
                     }
                 }
