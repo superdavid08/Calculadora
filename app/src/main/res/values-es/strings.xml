@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Calculadora</string>
-    <string name="main_delete">Borrar</string>
-    <string name="main_binary">Cambiar a Modo Binario</string>
-    <string name="main_standard">Cambiar a Modo Estándar</string>
-    <string name="main_invalidOperation">Operación no Válida</string>
+    <string name="main_txtDelete">Borrar</string>
+    <string name="main_txtModeBinary">Cambiar a Modo Binario</string>
+    <string name="main_txtModeStandard">Cambiar a Modo Estándar</string>
+    <string name="main_txtInvalidOperation">Operación no Válida</string>
 </resources>
