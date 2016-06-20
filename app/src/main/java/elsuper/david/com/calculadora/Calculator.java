@@ -14,8 +14,17 @@ public class Calculator {
         MODULE //4
     }
 
+    private TypeOperation operator;
+
+    public TypeOperation getOperator() {
+        return operator;
+    }
+    public void setOperator(TypeOperation operator) {
+        this.operator = operator;
+    }
+
     //Operaciones posibles para esta calculadora en modo estándar
-    public double standardOperation(double number1, double number2, TypeOperation operator){
+    public double standardOperation(double number1, double number2){
 
         double result = 0;
 

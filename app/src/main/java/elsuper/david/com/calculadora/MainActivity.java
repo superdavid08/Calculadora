@@ -1,6 +1,5 @@
 package elsuper.david.com.calculadora;
 
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,36 +9,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-
-import java.util.StringTokenizer;
-
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText etResult;
-    private Button btnBinary;
-    private Button btnDelete;
-    private ImageButton btnDeleteOne;
-    private Button btnModule;
-    private Button btnEqual;
-    private Button btnMulti;
-    private Button btnDiv;
-    private Button btnSum;
-    private Button btnSub;
-    private Button btnMoreLess;
-    private Button btnPoint;
-    private Button btnZero;
-    private Button btnOne;
-    private Button btnTwo;
-    private Button btnThree;
-    private Button btnFour;
-    private Button btnFive;
-    private Button btnSix;
-    private Button btnSeven;
-    private Button btnEight;
+    private EditText etResult;          private Button btnBinary;   private Button btnDelete;
+    private ImageButton btnDeleteOne;   private Button btnModule;   private Button btnEqual;
+    private Button btnMulti;            private Button btnDiv;      private Button btnSum;
+    private Button btnSub;              private Button btnMoreLess; private Button btnPoint;
+    private Button btnZero;             private Button btnOne;      private Button btnTwo;
+    private Button btnThree;            private Button btnFour;     private Button btnFive;
+    private Button btnSix;              private Button btnSeven;    private Button btnEight;
     private Button btnNine;
 
     //Para saber si la calculadora está en modo estándar o binario
@@ -48,12 +26,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static String operator;
     //Para almacenar la cadena existente en pantalla
     private String screenContent;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,9 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.main_btnSeven).setOnClickListener(this);
         findViewById(R.id.main_btnEight).setOnClickListener(this);
         findViewById(R.id.main_btnNine).setOnClickListener(this);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -175,27 +144,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Para cambiar de positivo a negativo y viceversa
                 moreLessProcess();
                 break;
-
         }
 
         //Ponemos siempre visible el último caracter ingresado o el último del resultado
         etResult.setSelection(etResult.getText().length());
     }
 
-
     //region Métodos
 
-    //TODO
+    //Cambio de signo para alguno de los operandos
     private void moreLessProcess() {
         screenContent = etResult.getText().toString();
+
         //Si ya hay un resultado en pantalla, lo tomamos como operación nueva
         if (screenContent.contains(btnEqual.getText().toString())) {
             String partsResult[] = screenContent.split(btnEqual.getText().toString());
             if (partsResult[1].startsWith("(-")) {//Si es negativo se le quita el signo
-                screenContent = screenContent.substring(2, screenContent.length() - 1);
+                screenContent = partsResult[1].replace("(-", "").replace(")", "");
                 etResult.setText(screenContent);
-            } else //Si es positivo se le agraga el signo
-                etResult.setText("(-" + screenContent + ")");
+            } else //Si es positivo se le agrega el signo
+                etResult.setText("(-" + screenContent);
 
             return;
         }
@@ -203,19 +171,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Si no hay un operador significa que sólo hay un operando
         if (!existPreviousOperator(screenContent)) {
             //Si es negativo se le quita el signo
-            if (screenContent.contains("(-") || screenContent.contains("(")) {
-                screenContent.replace("(-", "").replace("(", "").replace(")", "");
+            if (screenContent.contains("(-")) {
+                screenContent.replace("(-", "");
                 etResult.setText(screenContent);
-            } else//Si es positivo se le agraga el signo
+            } else//Si es positivo o la pantalla está limpia se le agrega el signo
                 etResult.setText("(-" + screenContent);
 
         } else { //Si hay un operador
             String operands[] = screenContent.split(" \\" + operator.trim() + " ");
             //Si es negativo se le quita el signo
-            if (operands[1].contains("(-") || operands[1].contains("(")) {
-                operands[1].replace("(-", "").replace("(", "").replace(")", "");
+            if (operands[1].contains("(-")) {
+                operands[1].replace("(-", "");
                 etResult.setText(operands[0] + operator + operands[1]);
-            } else//Si es positivo se le agraga el signo
+            } else//Si es positivo o aún no tiene números el operando 2 se le agrega el signo
                 etResult.setText(operands[0] + operator + "(-" + operands[1]);
         }
     }
@@ -384,126 +352,74 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return false;
     }
 
-    //TODO
+    //Realiza la operación
     private void OperationProcess() {
-        //Para almacenar la cadena existente en pantalla
-        String screenContent = etResult.getText().toString();
+        screenContent = etResult.getText().toString();
+        //Instancia de la calculadora para realizar la operación solicitada
         Calculator calculator = new Calculator();
 
         //Si hay un operador y la cadena termina con un cierre de parentesis o
         // un número, la operación puede realizarse
-        if (existPreviousOperator(screenContent) &&
-                (screenContent.endsWith(")") || screenContent.endsWith("0") || screenContent.endsWith("1") ||
-                        screenContent.endsWith("2") || screenContent.endsWith("3") || screenContent.endsWith("4") ||
-                        screenContent.endsWith("5") || screenContent.endsWith("6") || screenContent.endsWith("7") ||
-                        screenContent.endsWith("8") || screenContent.endsWith("9"))) {
-            //Modo binario
-            if (btnBinary.getText().equals(R.string.main_txtModeBinary)) {
-                Toast.makeText(getApplicationContext(), "Binario", Toast.LENGTH_SHORT).show();
-            } else { //Modo estándar
-                StringTokenizer tokens = new StringTokenizer(screenContent, operator);
-                //Log.v("David", tokens.countTokens() + " Num Tokens");
-                String stringNumber1 = "0";
-                String stringNumber2 = "0";
-                boolean negativOperand2 = false;
+        if (existPreviousOperator(screenContent) && screenContent.matches(".*[)0-9]$")) {
+            //Modo estándar
+            if (modeStandard) {
+                //Extraemos los operandos
+                String operands[] = screenContent.split(" \\" + operator.trim() + " ");
+                //Quitamos los parentesis, si tienen
+                String stringNumber1 = operands[0].replace("(", "").replace(")", "");
+                String stringNumber2 = operands[1];
 
-                int counter = 0;
-                //Separamos los operandos
-                while (tokens.hasMoreTokens()) {
-                    //Log.v("David", tokens.nextToken() + "");
-                    if (counter == 0)
-                        stringNumber1 = tokens.nextToken().replace("(", "").replace(")", "");
-                    else {
-                        stringNumber2 = tokens.nextToken();
+                //Si hay un parentesis abierto, es decir, es un núm negativo, lo cerramos (en pantalla)
+                if(stringNumber2.contains("("))
+                    etResult.setText(etResult.getText().toString() + ")");
 
-                        if (stringNumber2.contains("("))
-                            negativOperand2 = true;
+                stringNumber2 = operands[1].replace("(", "");
 
-                        stringNumber2 = stringNumber2.replace("(", "").replace(")", "");
-                    }
-                    counter++;
-                }
-
+                //hacemos la conversión
                 double number1 = Double.parseDouble(stringNumber1);
                 double number2 = Double.parseDouble(stringNumber2);
                 double result = 0;
 
+                //Asignamos el tipo de operación (+,-,*,/,%)
                 switch (operator) {
-                    case " + ":
-                        result = calculator.standardOperation(number1, number2, Calculator.TypeOperation.SUM);
+                    case " + ": //TODO: Por qué no puedo poner: btnSum.getText().toString() en vez de " + "
+                        calculator.setOperator(Calculator.TypeOperation.SUM);
                         break;
                     case " - ":
-                        result = calculator.standardOperation(number1, number2, Calculator.TypeOperation.SUSTRACTION);
+                        calculator.setOperator(Calculator.TypeOperation.SUSTRACTION);
                         break;
-                    case " x ":
-                        result = calculator.standardOperation(number1, number2, Calculator.TypeOperation.MULTIPLICATION);
+                    case " * ":
+                        calculator.setOperator(Calculator.TypeOperation.MULTIPLICATION);
                         break;
                     case " / ":
                         if (number2 == 0) {
                             Toast.makeText(getApplicationContext(), R.string.main_txtInvalidOperation, Toast.LENGTH_SHORT).show();
                             return;
                         } else
-                            result = calculator.standardOperation(number1, number2, Calculator.TypeOperation.DIVISION);
+                            calculator.setOperator(Calculator.TypeOperation.DIVISION);
                         break;
                     case " % ":
                         if (number2 == 0) {
                             Toast.makeText(getApplicationContext(), R.string.main_txtInvalidOperation, Toast.LENGTH_SHORT).show();
                             return;
                         } else
-                            result = calculator.standardOperation(number1, number2, Calculator.TypeOperation.MODULE);
+                            calculator.setOperator(Calculator.TypeOperation.MODULE);
                         break;
                 }
 
-                //Si hay un parentesis abierto, lo cerramos
-                if (negativOperand2)
-                    etResult.setText(etResult.getText().toString() + ")");
+                //Hacemos la operación
+                result = calculator.standardOperation(number1,number2);
 
+                //si el resultado es negativo agregamos el parentesis
                 if (result < 0)
-                    etResult.setText(etResult.getText().toString() + " = (-" + result + ")");
+                    etResult.setText(etResult.getText().toString() + " = (" + result + ")");
                 else
                     etResult.setText(etResult.getText().toString() + " = " + result);
             }
+            else { //Modo binario
+
+            }
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://elsuper.david.com.calculadora/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://elsuper.david.com.calculadora/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 
     //endregion
