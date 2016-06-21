@@ -90,6 +90,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*Manejo del evento*/
     public void onClick(View v) {
 
+        //Cuando el resultado sea ifinito
+        if(etResult.getText().toString().toLowerCase().contains("inf")){ //De infinity
+            Toast.makeText(getApplicationContext(), R.string.main_txtInfinity, Toast.LENGTH_SHORT).show();
+            etResult.setText("");
+            return;
+        }
+
         try {
             switch (v.getId()) {
                 //Para el botón del modo (Estándar/Binario)

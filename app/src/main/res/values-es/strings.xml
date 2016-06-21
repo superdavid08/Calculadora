@@ -5,4 +5,5 @@
     <string name="main_txtModeStandard">Cambiar a Modo Estándar</string>
     <string name="main_txtInvalidOperation">Operación no Válida</string>
     <string name="main_txtCrash">Por favor pongase en contacto con el administrador de la App</string>
+    <string name="main_txtInfinity">Infinito!!</string>
 </resources>
