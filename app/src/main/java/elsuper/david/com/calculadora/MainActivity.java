@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         catch (Exception ex){
             modeStandard = true;
-            operator = "";
             screenContent = "";
             Log.e(TAG,ex.getMessage());
             Toast.makeText(getApplicationContext(), R.string.main_txtCrash, Toast.LENGTH_SHORT).show();
@@ -202,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             else {
                 //Si es negativo se le quita el signo
                 if (operands.length > 1 && operands[1].contains("(-")) {
-                    operands[1] = operands[1].replace("(-", "");
+                    operands[1] = operands[1].replace("(-", "").replace(")", "");
                     etResult.setText(operands[0] + operator + operands[1]);
                 } else//Si es positivo o aún no tiene números el operando 2 se le agrega el signo
                     etResult.setText(operands[0] + operator + "(-" + operands[1]);
@@ -333,7 +332,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (screenContent.contains(btnEqual.getText().toString())) {
             etResult.setText(((Button) v).getText().toString());
-        } else
+        }
+        else if(!screenContent.matches(".*[)]$")) //Si no termina con parentesis (es un caso particular)
             etResult.setText(etResult.getText().toString() + ((Button) v).getText().toString());
     }
 
@@ -418,10 +418,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String stringNumber2 = operands[1];
 
             //Si hay un parentesis abierto, es decir, es un núm negativo, lo cerramos (en pantalla)
-            if(stringNumber2.contains("("))
+            if(stringNumber2.contains("(") && !stringNumber2.contains(")"))
                 etResult.setText(etResult.getText().toString() + ")");
 
-            stringNumber2 = operands[1].replace("(", "");
+            stringNumber2 = operands[1].replace("(", "").replace(")", "");
 
 
             //Modo estándar
