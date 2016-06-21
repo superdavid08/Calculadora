@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+/**
+ * Andrés David García Gómez
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG = "Log_Calculator";
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Contendrá el texto de algún botón "operador", por ejemplo " + " (con el espacio incluido antes y despues)
     private static String operator;
     //Para almacenar la cadena existente en pantalla
-    private String screenContent;
+    private static String screenContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 screenContent = partsResult[1].replace("(-", "").replace(")", "");
                 etResult.setText(screenContent);
             } else //Si es positivo se le agrega el signo
-                etResult.setText("(-" + screenContent);
+                etResult.setText("(-" + partsResult[1]);
 
             return;
         }
@@ -191,12 +194,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } else { //Si hay un operador
             String operands[] = screenContent.split(" \\" + operator.trim() + " ");
-            //Si es negativo se le quita el signo
-            if (operands[1].contains("(-")) {
-                operands[1] = operands[1].replace("(-", "");
-                etResult.setText(operands[0] + operator + operands[1]);
-            } else//Si es positivo o aún no tiene números el operando 2 se le agrega el signo
-                etResult.setText(operands[0] + operator + "(-" + operands[1]);
+
+            //Es el siguiente caracter después del operador
+            if ((operands.length == 1) ) {
+                etResult.setText(operands[0] + operator + "(-");
+            }
+            else {
+                //Si es negativo se le quita el signo
+                if (operands.length > 1 && operands[1].contains("(-")) {
+                    operands[1] = operands[1].replace("(-", "");
+                    etResult.setText(operands[0] + operator + operands[1]);
+                } else//Si es positivo o aún no tiene números el operando 2 se le agrega el signo
+                    etResult.setText(operands[0] + operator + "(-" + operands[1]);
+            }
         }
     }
 
