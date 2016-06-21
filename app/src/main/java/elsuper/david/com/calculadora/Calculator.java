@@ -1,61 +1,64 @@
 package elsuper.david.com.calculadora;
 
 /**
- * Created by VPCF1 on 13/06/2016.
+ * Andrés David García Gómez
  */
 public class Calculator {
 
     public enum TypeOperation
     {
-        SUM, //0
-        SUSTRACTION, //1
-        MULTIPLICATION, //2
-        DIVISION, //3
-        MODULE //4
-    }
-
-    private TypeOperation operator;
-
-    public TypeOperation getOperator() {
-        return operator;
-    }
-    public void setOperator(TypeOperation operator) {
-        this.operator = operator;
+        SUM,
+        SUSTRACTION,
+        MULTIPLICATION,
+        DIVISION,
+        MODULE
     }
 
     //Operaciones posibles para esta calculadora en modo estándar
-    public double standardOperation(double number1, double number2){
+    public double standardOperation(double number1, double number2, TypeOperation operator){
 
         double result = 0;
 
-        switch (operator.ordinal()) {
-            case 0:
+        switch (operator) {
+            case SUM:
                 result = number1 + number2;
             break;
-            case 1:
+            case SUSTRACTION:
                 result = number1 - number2;
             break;
-            case 2:
+            case MULTIPLICATION:
                 result = number1 * number2;
             break;
-            case 3:
+            case DIVISION:
                 result = number1 / number2;
             break;
-            case 4:
+            case MODULE:
                 result = number1 % number2;
             break;
         }
         return result;
     }
 
-
     //Operaciones posibles para esta calculadora en modo binario
     public String binaryOperation(String number1, String number2, TypeOperation operator){
 
-        switch (operator.ordinal()) {
-            case 0:
+        String result = "";
+        long operation = 0;
+
+        //Convertimos los operandos a enteros largos
+        long operand1 = Long.parseLong(number1, 2);
+        long operand2 = Long.parseLong(number2, 2);
+
+        switch (operator) {
+            case SUM:
+                //Hacemos la operación
+                operation = operand1 + operand2;
                 break;
         }
-        return "";
+
+        //Convertimos a binario
+        result = Long.toString(operation, 2);
+
+        return result;
     }
 }

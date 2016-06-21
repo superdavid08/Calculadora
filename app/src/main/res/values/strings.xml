@@ -4,4 +4,5 @@
     <string name="main_txtModeBinary">Change to Binary Mode</string>
     <string name="main_txtModeStandard">Change to Standard Mode</string>
     <string name="main_txtInvalidOperation">Invalid Operation</string>
+    <string name="main_txtCrash">Please contact the administrator of the App</string>
 </resources>

@@ -3,6 +3,7 @@ package elsuper.david.com.calculadora;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static final String TAG = "Log_Calculator";
 
     private EditText etResult;          private Button btnBinary;   private Button btnDelete;
     private ImageButton btnDeleteOne;   private Button btnModule;   private Button btnEqual;
@@ -84,70 +87,79 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*Manejo del evento*/
     public void onClick(View v) {
 
-        switch (v.getId()) {
-            //Para el botón del modo (Estándar/Binario)
-            case R.id.main_btnBinary:
-                modeStandard = !modeStandard;
-                //Limpiamos la pantalla
-                etResult.setText("");
-                //Dependiendo del modo, se habilitan o deshabilitan algunos botones
-                btnModule.setEnabled(modeStandard);
-                btnMulti.setEnabled(modeStandard);
-                btnDiv.setEnabled(modeStandard);
-                btnSub.setEnabled(modeStandard);
-                btnMoreLess.setEnabled(modeStandard);
-                btnPoint.setEnabled(modeStandard);
-                btnTwo.setEnabled(modeStandard);
-                btnThree.setEnabled(modeStandard);
-                btnFour.setEnabled(modeStandard);
-                btnFive.setEnabled(modeStandard);
-                btnSix.setEnabled(modeStandard);
-                btnSeven.setEnabled(modeStandard);
-                btnEight.setEnabled(modeStandard);
-                btnNine.setEnabled(modeStandard);
-                PaintButtons(modeStandard);
-                break;
-            case R.id.main_btnZero:
-            case R.id.main_btnOne:
-            case R.id.main_btnTwo:
-            case R.id.main_btnThree:
-            case R.id.main_btnFour:
-            case R.id.main_btnFive:
-            case R.id.main_btnSix:
-            case R.id.main_btnSeven:
-            case R.id.main_btnEight:
-            case R.id.main_btnNine:
-                numberDisplay(v);
-                break;
-            case R.id.main_btnModule:
-            case R.id.main_btnMulti:
-            case R.id.main_btnDiv:
-            case R.id.main_btnSum:
-            case R.id.main_btnSub:
-                operatorDisplay(v);
-                break;
-            case R.id.main_btnEqual:
-                OperationProcess();
-                break;
-            case R.id.main_btnDelete:
-                //Limpia la pantalla
-                etResult.setText("");
-                break;
-            case R.id.main_btnPoint:
-                pointProcess();
-                break;
-            case R.id.main_btnDeleteOne:
-                //Borra el último caracter ingresado
-                deleteOneProcess();
-                break;
-            case R.id.main_btnMoreLess:
-                //Para cambiar de positivo a negativo y viceversa
-                moreLessProcess();
-                break;
-        }
+        try {
+            switch (v.getId()) {
+                //Para el botón del modo (Estándar/Binario)
+                case R.id.main_btnBinary:
+                    modeStandard = !modeStandard;
+                    //Limpiamos la pantalla
+                    etResult.setText("");
+                    //Dependiendo del modo, se habilitan o deshabilitan algunos botones
+                    btnModule.setEnabled(modeStandard);
+                    btnMulti.setEnabled(modeStandard);
+                    btnDiv.setEnabled(modeStandard);
+                    btnSub.setEnabled(modeStandard);
+                    btnMoreLess.setEnabled(modeStandard);
+                    btnPoint.setEnabled(modeStandard);
+                    btnTwo.setEnabled(modeStandard);
+                    btnThree.setEnabled(modeStandard);
+                    btnFour.setEnabled(modeStandard);
+                    btnFive.setEnabled(modeStandard);
+                    btnSix.setEnabled(modeStandard);
+                    btnSeven.setEnabled(modeStandard);
+                    btnEight.setEnabled(modeStandard);
+                    btnNine.setEnabled(modeStandard);
+                    PaintButtons(modeStandard);
+                    break;
+                case R.id.main_btnZero:
+                case R.id.main_btnOne:
+                case R.id.main_btnTwo:
+                case R.id.main_btnThree:
+                case R.id.main_btnFour:
+                case R.id.main_btnFive:
+                case R.id.main_btnSix:
+                case R.id.main_btnSeven:
+                case R.id.main_btnEight:
+                case R.id.main_btnNine:
+                    numberDisplay(v);
+                    break;
+                case R.id.main_btnModule:
+                case R.id.main_btnMulti:
+                case R.id.main_btnDiv:
+                case R.id.main_btnSum:
+                case R.id.main_btnSub:
+                    operatorDisplay(v);
+                    break;
+                case R.id.main_btnEqual:
+                    OperationProcess();
+                    break;
+                case R.id.main_btnDelete:
+                    //Limpia la pantalla
+                    etResult.setText("");
+                    break;
+                case R.id.main_btnPoint:
+                    pointProcess();
+                    break;
+                case R.id.main_btnDeleteOne:
+                    //Borra el último caracter ingresado
+                    deleteOneProcess();
+                    break;
+                case R.id.main_btnMoreLess:
+                    //Para cambiar de positivo a negativo y viceversa
+                    moreLessProcess();
+                    break;
+            }
 
-        //Ponemos siempre visible el último caracter ingresado o el último del resultado
-        etResult.setSelection(etResult.getText().length());
+            //Ponemos siempre visible el último caracter ingresado o el último del resultado
+            etResult.setSelection(etResult.getText().length());
+        }
+        catch (Exception ex){
+            modeStandard = true;
+            operator = "";
+            screenContent = "";
+            Log.e(TAG,ex.getMessage());
+            Toast.makeText(getApplicationContext(), R.string.main_txtCrash, Toast.LENGTH_SHORT).show();
+        }
     }
 
     //region Métodos
@@ -357,58 +369,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         screenContent = etResult.getText().toString();
         //Instancia de la calculadora para realizar la operación solicitada
         Calculator calculator = new Calculator();
+        //Para el tipo de operación (+,-,*,/,%)
+        Calculator.TypeOperation typeOperation = null;
 
         //Si hay un operador y la cadena termina con un cierre de parentesis o
         // un número, la operación puede realizarse
         if (existPreviousOperator(screenContent) && screenContent.matches(".*[)0-9]$")) {
+
+            //Asignamos el tipo de operación
+            switch (operator) {
+                case " + ":
+                    typeOperation = Calculator.TypeOperation.SUM;
+                    break;
+                case " - ":
+                    typeOperation = Calculator.TypeOperation.SUSTRACTION;
+                    break;
+                case " * ":
+                    typeOperation = Calculator.TypeOperation.MULTIPLICATION;
+                    break;
+                case " / ":
+                    typeOperation = Calculator.TypeOperation.DIVISION;
+                    break;
+                case " % ":
+                    typeOperation = Calculator.TypeOperation.MODULE;
+                    break;
+            }
+
+            //Extraemos los operandos
+            String operands[] = screenContent.split(" \\" + operator.trim() + " ");
+            //Quitamos los parentesis, si tienen
+            String stringNumber1 = operands[0].replace("(", "").replace(")", "");
+            String stringNumber2 = operands[1];
+
+            //Si hay un parentesis abierto, es decir, es un núm negativo, lo cerramos (en pantalla)
+            if(stringNumber2.contains("("))
+                etResult.setText(etResult.getText().toString() + ")");
+
+            stringNumber2 = operands[1].replace("(", "");
+
+
             //Modo estándar
             if (modeStandard) {
-                //Extraemos los operandos
-                String operands[] = screenContent.split(" \\" + operator.trim() + " ");
-                //Quitamos los parentesis, si tienen
-                String stringNumber1 = operands[0].replace("(", "").replace(")", "");
-                String stringNumber2 = operands[1];
-
-                //Si hay un parentesis abierto, es decir, es un núm negativo, lo cerramos (en pantalla)
-                if(stringNumber2.contains("("))
-                    etResult.setText(etResult.getText().toString() + ")");
-
-                stringNumber2 = operands[1].replace("(", "");
-
                 //hacemos la conversión
                 double number1 = Double.parseDouble(stringNumber1);
                 double number2 = Double.parseDouble(stringNumber2);
                 double result = 0;
 
-                //Asignamos el tipo de operación (+,-,*,/,%)
-                switch (operator) {
-                    case " + ": //TODO: Por qué no puedo poner: btnSum.getText().toString() en vez de " + "
-                        calculator.setOperator(Calculator.TypeOperation.SUM);
-                        break;
-                    case " - ":
-                        calculator.setOperator(Calculator.TypeOperation.SUSTRACTION);
-                        break;
-                    case " * ":
-                        calculator.setOperator(Calculator.TypeOperation.MULTIPLICATION);
-                        break;
-                    case " / ":
-                        if (number2 == 0) {
-                            Toast.makeText(getApplicationContext(), R.string.main_txtInvalidOperation, Toast.LENGTH_SHORT).show();
-                            return;
-                        } else
-                            calculator.setOperator(Calculator.TypeOperation.DIVISION);
-                        break;
-                    case " % ":
-                        if (number2 == 0) {
-                            Toast.makeText(getApplicationContext(), R.string.main_txtInvalidOperation, Toast.LENGTH_SHORT).show();
-                            return;
-                        } else
-                            calculator.setOperator(Calculator.TypeOperation.MODULE);
-                        break;
+                //Validando la división entre cero
+                if((typeOperation == Calculator.TypeOperation.DIVISION || typeOperation == Calculator.TypeOperation.MODULE)
+                        && number2 == 0){
+                    Toast.makeText(getApplicationContext(), R.string.main_txtInvalidOperation, Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 //Hacemos la operación
-                result = calculator.standardOperation(number1,number2);
+                result = calculator.standardOperation(number1,number2, typeOperation);
 
                 //si el resultado es negativo agregamos el parentesis
                 if (result < 0)
@@ -417,7 +432,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     etResult.setText(etResult.getText().toString() + " = " + result);
             }
             else { //Modo binario
-
+                //Hacemos la operación
+                etResult.setText(etResult.getText().toString() +
+                        " = " + calculator.binaryOperation(stringNumber1, stringNumber2, typeOperation));
             }
         }
     }
