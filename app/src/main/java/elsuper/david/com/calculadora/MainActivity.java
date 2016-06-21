@@ -434,6 +434,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Validando la división entre cero
                 if((typeOperation == Calculator.TypeOperation.DIVISION || typeOperation == Calculator.TypeOperation.MODULE)
                         && number2 == 0){
+                    etResult.setText(operands[0] + operator);
                     Toast.makeText(getApplicationContext(), R.string.main_txtInvalidOperation, Toast.LENGTH_SHORT).show();
                     return;
                 }
