@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!existPreviousOperator(screenContent)) {
             //Si es negativo se le quita el signo
             if (screenContent.contains("(-")) {
-                screenContent.replace("(-", "");
+                screenContent = screenContent.replace("(-", "");
                 etResult.setText(screenContent);
             } else//Si es positivo o la pantalla está limpia se le agrega el signo
                 etResult.setText("(-" + screenContent);
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String operands[] = screenContent.split(" \\" + operator.trim() + " ");
             //Si es negativo se le quita el signo
             if (operands[1].contains("(-")) {
-                operands[1].replace("(-", "");
+                operands[1] = operands[1].replace("(-", "");
                 etResult.setText(operands[0] + operator + operands[1]);
             } else//Si es positivo o aún no tiene números el operando 2 se le agrega el signo
                 etResult.setText(operands[0] + operator + "(-" + operands[1]);
@@ -367,6 +367,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Realiza la operación
     private void OperationProcess() {
         screenContent = etResult.getText().toString();
+
+        //Si ya hay un resultado en pantalla, dejamos el resultado igual
+        if (screenContent.contains(btnEqual.getText().toString())) {
+            return;
+        }
+
         //Instancia de la calculadora para realizar la operación solicitada
         Calculator calculator = new Calculator();
         //Para el tipo de operación (+,-,*,/,%)
